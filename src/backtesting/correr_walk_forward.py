@@ -60,9 +60,9 @@ def construir_dataset_completo(tickers, objetivo_pct, limite_pct, horizonte):
     return pd.concat(datasets).sort_index(level="fecha")
 
 
-def resumir(predicciones: pd.DataFrame, nombre_modelo: str, costos: dict) -> dict:
+def resumir(predicciones: pd.DataFrame, nombre_modelo: str, costos: dict, umbral: float = 0.5) -> dict:
     de_este_modelo = predicciones[predicciones["modelo"] == nombre_modelo]
-    decide_comprar = de_este_modelo["probabilidad_exito"] > 0.5
+    decide_comprar = de_este_modelo["probabilidad_exito"] > umbral
     señales = de_este_modelo[decide_comprar]
     aciertos = señales[señales["etiqueta_real"] == 1]
     fallos = señales[señales["etiqueta_real"] == -1]
@@ -104,6 +104,9 @@ def main():
                          help="Horizonte en ruedas (por defecto, el de config/colombia-mvp.yaml)")
     parser.add_argument("--frac-test", type=float, default=0.5,
                          help="Fracción final del historial a usar como periodo de validación walk-forward")
+    parser.add_argument("--umbral", type=float, default=0.5,
+                         help="Probabilidad mínima de éxito para considerar 'señal de compra' (0.5-1.0). "
+                              "Subirlo reduce el número de señales pero solo deja las de mayor convicción.")
     args = parser.parse_args()
 
     with open(CONFIG_PATH, "r", encoding="utf-8") as f:
@@ -122,7 +125,8 @@ def main():
     fechas_unicas = datos.index.get_level_values("fecha").unique().sort_values()
     fecha_inicio_test = fechas_unicas[int(len(fechas_unicas) * (1 - args.frac_test))]
     print(f"\nPeriodo de validación walk-forward: desde {fecha_inicio_test.date()} "
-          f"({args.frac_test:.0%} más reciente del historial disponible)\n")
+          f"({args.frac_test:.0%} más reciente del historial disponible)")
+    print(f"Umbral de convicción para comprar: probabilidad_exito > {args.umbral:.2f}\n")
 
     columnas_features = [c for c in datos.columns if c not in COLUMNAS_NO_FEATURE]
 
@@ -141,7 +145,7 @@ def main():
             print(f"  {nombre}: sin predicciones (no hubo suficiente historia de entrenamiento)")
             continue
         todas_las_predicciones.append(predicciones)
-        resumen_filas.append(resumir(predicciones, nombre, costos))
+        resumen_filas.append(resumir(predicciones, nombre, costos, umbral=args.umbral))
 
     if not resumen_filas:
         sys.exit("Ningún modelo generó predicciones — revisa min_filas_train y fecha_inicio_test.")
