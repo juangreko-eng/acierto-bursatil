@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.egg-info/
+.ipynb_checkpoints/
+
+# Datos crudos descargados: no se versionan, solo el código que los genera
+data/raw/
+*.csv
+!reports/disponibilidad_datos.csv.example

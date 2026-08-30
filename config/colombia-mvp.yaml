@@ -1,0 +1,132 @@
+# Configuración base del MVP — ACierto Bursátil (Colombia)
+# Estos pesos y parámetros son hipótesis iniciales; deben validarse con backtesting,
+# no asumirse como definitivos (ver references/marco-metodologico.md, sección de ranking).
+
+perfil_operacion:
+  mercado: "Bolsa de Valores de Colombia (BVC)"
+  capital_referencia_cop: 100000000
+  perfil_riesgo: "medio"
+  horizonte_max_ruedas: 20
+  objetivo_indicativo_pct: [2, 3]
+  max_posiciones: 3
+  frecuencia_analisis: "diaria"
+  frecuencia_decision: "semanal_o_evento_material"
+  ejecucion: "manual_via_trii"
+  fuentes_datos: "gratuitas"
+  operacion_automatica: false
+  validacion_inicial: "portafolio_simulado"
+
+barreras:
+  objetivo_positivo_pct: 3
+  limite_negativo_pct: -2
+  limite_temporal_ruedas: 20
+  ajustar_por_volatilidad: true
+
+# Universo candidato completo (sección 3 del documento original).
+# ticker_yahoo verificado por búsqueda web el 2026-08-30 — pendiente de
+# confirmar profundidad histórica y calidad real de los datos (ver
+# references/fuentes-colombia.md).
+universo_candidato:
+  - ticker_bvc: "ECOPETROL"
+    nombre: "Ecopetrol"
+    ticker_yahoo: "ECOPETROL.CL"
+    sector: "energia"
+  - ticker_bvc: "BCOLOMBIA"
+    nombre: "Bancolombia ordinaria"
+    ticker_yahoo: "BCOLOMBIA.CL"
+    sector: "financiero"
+  - ticker_bvc: "PFBCOLOM"
+    nombre: "Bancolombia preferencial"
+    ticker_yahoo: "PFBCOLOM.CL"
+    sector: "financiero"
+  - ticker_bvc: "GRUPOSURA"
+    nombre: "Grupo Sura"
+    ticker_yahoo: "GRUPOSURA.CL"
+    sector: "financiero"
+  - ticker_bvc: "GRUPOARGOS"
+    nombre: "Grupo Argos"
+    ticker_yahoo: "GRUPOARGOS.CL"
+    sector: "conglomerado"
+  - ticker_bvc: "PFGRUPOARG"
+    nombre: "Grupo Argos preferencial"
+    ticker_yahoo: "PFGRUPOARG.CL"
+    sector: "conglomerado"
+  - ticker_bvc: "CEMARGOS"
+    nombre: "Cementos Argos"
+    ticker_yahoo: "CEMARGOS.CL"
+    sector: "materiales"
+  - ticker_bvc: "PFCEMARGOS"
+    nombre: "Cementos Argos preferencial"
+    ticker_yahoo: "PFCEMARGOS.CL"
+    sector: "materiales"
+  - ticker_bvc: "ISA"
+    nombre: "ISA (Interconexión Eléctrica)"
+    ticker_yahoo: "ISA.CL"
+    sector: "energia"
+  - ticker_bvc: "CELSIA"
+    nombre: "Celsia"
+    ticker_yahoo: "CELSIA.CL"
+    sector: "energia"
+  - ticker_bvc: "GEB"
+    nombre: "Grupo Energía Bogotá"
+    ticker_yahoo: "GEB.CL"
+    sector: "energia"
+  - ticker_bvc: "CORFICOLCF"
+    nombre: "Corficolombiana"
+    ticker_yahoo: "CORFICOLCF.CL"
+    sector: "financiero"
+  - ticker_bvc: "TERPEL"
+    nombre: "Terpel"
+    ticker_yahoo: "TERPEL.CL"
+    sector: "energia"
+  - ticker_bvc: "MINEROS"
+    nombre: "Mineros"
+    ticker_yahoo: "MINEROS.CL"
+    sector: "materiales"
+  - ticker_bvc: "PFDAVVNDA"
+    nombre: "Davivienda preferencial"
+    ticker_yahoo: "PFDAVVNDA.CL"
+    sector: "financiero"
+
+# Subconjunto para la prueba de disponibilidad inicial (sección 12 del documento original)
+universo_piloto:
+  - "ECOPETROL.CL"
+  - "PFBCOLOM.CL"
+  - "GRUPOARGOS.CL"
+  - "CEMARGOS.CL"
+  - "CELSIA.CL"
+
+filtro_liquidez_mensual:
+  ventana_dias: 60
+  requiere_negociacion_suficiente: true
+  max_ruedas_sin_operacion: null   # pendiente de definir un umbral numérico
+  excluir_si_opa_o_suspension: true
+  excluir_si_historico_insuficiente: true
+
+ranking:
+  formula: "0.40*P_exito + 0.25*R_esperado + 0.20*F_tendencia + 0.15*L_liquidez - Penalizacion_riesgo"
+  pesos:
+    probabilidad_exito: 0.40
+    retorno_esperado: 0.25
+    fortaleza_tendencia: 0.20
+    liquidez: 0.15
+  nota: "Pesos son hipótesis iniciales, deben validarse por backtesting."
+
+reglas_portafolio:
+  max_acciones: 3
+  max_pct_una_accion: 40
+  max_pct_un_sector: 60
+  efectivo_min_pct: 0
+  efectivo_max_pct: 100
+  ajustar_tamano_por_volatilidad: true
+  evitar_dos_clases_misma_empresa: true
+  no_operar_si_costos_eliminan_rentabilidad: true
+
+costos:
+  # Pendiente de obtener de Trii (sección 8 del documento original)
+  comision_fija_o_variable: null
+  iva_pct: null
+  costos_compra: null
+  costos_venta: null
+  cargos_adicionales: null
+  tamano_minimo_eficiente_cop: null
