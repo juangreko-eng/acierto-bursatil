@@ -49,6 +49,20 @@ se mantiene en `config/colombia-mvp.yaml` para la v1 completa, pero deberá
 pasar por un filtro adicional de "sin evento corporativo material reciente"
 antes de incluirse en cualquier entrenamiento o backtesting.
 
+## Resultados reales de la prueba de disponibilidad (2026-08-30)
+
+Corrida contra el universo piloto no-GEA (`src/datos/test_disponibilidad.py`), con datos reales de Yahoo Finance:
+
+| Ticker | Desde | Ruedas | % días sin volumen | Lectura |
+|---|---|---|---|---|
+| ECOPETROL.CL | 2007-11-28 | 4.853 | 6.8% | Sólida |
+| ISA.CL | 2001-08-21 | 6.488 | 12.9% | Buena, historia larga |
+| GEB.CL | 2009-10-07 | 4.368 | 7.1% | Sólida |
+| CORFICOLCF.CL | 2007-04-03 | 5.023 | 7.2% | Sólida |
+| TERPEL.CL | 2014-08-19 | 3.102 | **25.7%** | ⚠️ Ver nota abajo |
+
+**Nota sobre Terpel:** aunque aparece 5ª en el ranking de liquidez de TradingView por *valor total negociado*, una de cada cuatro ruedas tiene volumen cero — probablemente porque ese valor lo explican operaciones grandes y esporádicas (bloques) más que actividad diaria constante. Antes de incluir Terpel en cualquier entrenamiento o backtesting, debe pasar por el filtro de liquidez mensual de `marco-metodologico.md`; es candidata a quedar excluida la mayoría de los meses, o a ser reemplazada por otra acción no-GEA (p.ej. Mineros o Banco de Bogotá, siguientes en el ranking de liquidez).
+
 ## Próximos pasos de esta sección
 
 1. Ejecutar `src/datos/test_disponibilidad.py` contra las 5 acciones piloto para confirmar profundidad histórica real, huecos y calidad de los datos vía `yfinance`.
