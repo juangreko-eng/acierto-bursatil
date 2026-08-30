@@ -29,6 +29,7 @@ from src.variables.features import construir_features
 from src.backtesting.triple_barrera import etiquetar_triple_barrera
 from src.backtesting.evaluar_simple import descargar_precios, COLUMNAS_NO_FEATURE
 from src.backtesting.walk_forward import correr_walk_forward
+from src.backtesting.costos import retorno_neto
 from src.modelos.baseline import ComprarYMantener, Momentum, CruceMediasMoviles
 from src.modelos.logistic_model import RegresionLogistica
 
@@ -59,7 +60,7 @@ def construir_dataset_completo(tickers, objetivo_pct, limite_pct, horizonte):
     return pd.concat(datasets).sort_index(level="fecha")
 
 
-def resumir(predicciones: pd.DataFrame, nombre_modelo: str) -> dict:
+def resumir(predicciones: pd.DataFrame, nombre_modelo: str, costos: dict) -> dict:
     de_este_modelo = predicciones[predicciones["modelo"] == nombre_modelo]
     decide_comprar = de_este_modelo["probabilidad_exito"] > 0.5
     señales = de_este_modelo[decide_comprar]
@@ -77,13 +78,21 @@ def resumir(predicciones: pd.DataFrame, nombre_modelo: str) -> dict:
         else float("nan")
     )
 
+    retorno_prom_señal_neto = retorno_neto(
+        retorno_prom_señal,
+        comision_pct=costos["comision_pct"],
+        iva_pct=costos["iva_pct"],
+        deslizamiento_pct=costos.get("deslizamiento_pct") or 0.0,
+    ) if pd.notna(retorno_prom_señal) else float("nan")
+
     return {
         "modelo": nombre_modelo,
         "n_bloques_reentrenados": int(de_este_modelo["fecha_corte_entrenamiento"].nunique()),
         "n_señales_compra": int(decide_comprar.sum()),
         "n_total_observaciones": len(de_este_modelo),
         "tasa_acierto_no_neutral": tasa_acierto,
-        "retorno_prom_si_compra": retorno_prom_señal,
+        "retorno_prom_si_compra_bruto": retorno_prom_señal,
+        "retorno_prom_si_compra_neto": retorno_prom_señal_neto,
         "retorno_prom_todas": de_este_modelo["retorno_real"].mean(),
         "ratio_ganancia_perdida": ratio,
     }
@@ -102,6 +111,7 @@ def main():
 
     tickers = config["universo_piloto"]
     barreras = config["barreras"]
+    costos = config["costos"]
     horizonte = args.horizonte or barreras["limite_temporal_ruedas"]
     objetivo_pct = barreras["objetivo_positivo_pct"] / 100
     limite_pct = barreras["limite_negativo_pct"] / 100
@@ -131,14 +141,19 @@ def main():
             print(f"  {nombre}: sin predicciones (no hubo suficiente historia de entrenamiento)")
             continue
         todas_las_predicciones.append(predicciones)
-        resumen_filas.append(resumir(predicciones, nombre))
+        resumen_filas.append(resumir(predicciones, nombre, costos))
 
     if not resumen_filas:
         sys.exit("Ningún modelo generó predicciones — revisa min_filas_train y fecha_inicio_test.")
 
     tabla = pd.DataFrame(resumen_filas).set_index("modelo")
-    pd.set_option("display.float_format", lambda x: f"{x:.3f}")
+    pd.set_option("display.float_format", lambda x: f"{x:.4f}")
     print("\n" + tabla.to_string())
+
+    if not costos.get("deslizamiento_pct"):
+        print("\nAVISO: el deslizamiento (impacto de mercado al ejecutar) todavía no está "
+              "estimado con datos reales y se asumió 0% — el 'retorno_prom_si_compra_neto' "
+              "de arriba es, si acaso, optimista.")
 
     reports_dir = Path(__file__).resolve().parents[2] / "reports"
     reports_dir.mkdir(exist_ok=True)

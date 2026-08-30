@@ -25,6 +25,7 @@ Ver `references/marco-metodologico.md` para el detalle completo.
 - [x] Prueba de disponibilidad de datos con las 5 acciones piloto (`src/datos/`) — corrida con datos reales, ver `references/fuentes-colombia.md`
 - [ ] Obtención de costos reales de Trii (comisiones, IVA, deslizamiento)
 - [x] Motor de backtesting walk-forward (`src/backtesting/walk_forward.py` + `correr_walk_forward.py`) — reentrena periódicamente sin mezclar pasado y futuro, verificado con test dedicado anti-fuga de información; guarda cada predicción en `predictions/` para trazabilidad
+- [x] Costos reales de Trii (`src/backtesting/costos.py`) — 0.25% de comisión + 19% de IVA por lado, confirmado con Trii 2026-08-30. Deslizamiento aún sin estimar (asumido 0%, ver aviso al correr el script)
 - [ ] Generador de reporte semanal
 
 ## Estructura

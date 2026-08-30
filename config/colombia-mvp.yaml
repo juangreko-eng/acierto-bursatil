@@ -129,10 +129,12 @@ reglas_portafolio:
   no_operar_si_costos_eliminan_rentabilidad: true
 
 costos:
-  # Pendiente de obtener de Trii (sección 8 del documento original)
-  comision_fija_o_variable: null
-  iva_pct: null
-  costos_compra: null
-  costos_venta: null
+  # Confirmado con Trii 2026-08-30: 0.25% de comisión + IVA (19%) sobre esa
+  # comisión, en cada lado de la operación (compra y venta).
+  comision_pct: 0.0025
+  iva_pct: 0.19
+  deslizamiento_pct: null   # pendiente de estimar con datos reales — no incluido todavía
+  costos_compra: null       # cualquier cargo adicional de compra distinto a la comisión
+  costos_venta: null        # cualquier cargo adicional de venta distinto a la comisión
   cargos_adicionales: null
   tamano_minimo_eficiente_cop: null

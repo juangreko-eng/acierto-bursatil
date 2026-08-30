@@ -51,14 +51,18 @@ Los componentes se normalizan entre 0 y 100. Los pesos son hipótesis iniciales 
 
 La posibilidad de recomendar 100% efectivo es fundamental: un modelo obligado a escoger siempre tres acciones terminaría inventando oportunidades.
 
-## Costos reales (pendiente de obtener de Trii)
+## Costos reales (confirmado con Trii, 2026-08-30)
 
-- Comisión fija o variable.
-- IVA.
-- Costos de compra.
-- Costos de venta.
-- Eventuales cargos adicionales.
-- Tamaño mínimo económicamente eficiente.
+- Comisión: 0.25% por transacción.
+- IVA: 19%, aplicado sobre la comisión.
+- Costo de ida y vuelta (compra + venta): 0.25% × 1.19 × 2 ≈ **0.595%**.
+- Deslizamiento: pendiente de estimar con datos reales. Mientras tanto se
+  asume 0% en `config/colombia-mvp.yaml`, lo que significa que cualquier
+  retorno neto calculado hoy es, si acaso, optimista.
+- Cargos adicionales y tamaño mínimo eficiente: pendientes de confirmar.
+
+Implementado en `src/backtesting/costos.py` y usado automáticamente por
+`correr_walk_forward.py`.
 
 **Retorno neto:**
 
