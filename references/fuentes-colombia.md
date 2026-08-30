@@ -29,6 +29,26 @@ Estado a 2026-08-30. "Verificado" significa que se confirmó que la fuente exist
 |---|---|---|
 | Superintendencia Financiera de Colombia | Sin verificar profundidad de acceso automatizado | Es la fuente oficial de información relevante (resultados, cambios de junta, dividendos, OPA, litigios). Convertir esto en variable estructurada es, en la práctica, un mini-proyecto de NLP — se recomienda tratarlo como iteración separada, fuera de la v1. |
 
+## Nota sobre el GEA y el desenroque accionario (2026-08-30)
+
+Las acciones del Grupo Empresarial Antioqueño (GEA) — Grupo Cibest (entidad
+que agrupa lo que antes era Bancolombia/Grupo Sura, renombrada tras la
+reestructuración), Grupo Argos, Cementos Argos, Grupo Sura y Celsia — vienen
+desenrocando sus participaciones cruzadas históricas. Esto genera eventos
+corporativos (canjes de acciones, OPAs, cambios de razón social) que vuelven
+su comportamiento de precio del último año incomparable con su historia
+previa, exactamente el tipo de situación que el filtro de elegibilidad de
+`marco-metodologico.md` busca excluir ("no está sometida a una OPA,
+suspensión u otro evento que vuelva incomparable su comportamiento").
+
+Por eso el universo piloto se cambió a las 5 acciones **no-GEA** más líquidas
+de la BVC por valor negociado diario (fuente: ranking de TradingView,
+consultado 2026-08-30): Ecopetrol, ISA, Grupo Energía Bogotá, Corficolombiana
+y Terpel. El resto del universo candidato (incluyendo las acciones del GEA)
+se mantiene en `config/colombia-mvp.yaml` para la v1 completa, pero deberá
+pasar por un filtro adicional de "sin evento corporativo material reciente"
+antes de incluirse en cualquier entrenamiento o backtesting.
+
 ## Próximos pasos de esta sección
 
 1. Ejecutar `src/datos/test_disponibilidad.py` contra las 5 acciones piloto para confirmar profundidad histórica real, huecos y calidad de los datos vía `yfinance`.

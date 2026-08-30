@@ -88,13 +88,19 @@ universo_candidato:
     ticker_yahoo: "PFDAVVNDA.CL"
     sector: "financiero"
 
-# Subconjunto para la prueba de disponibilidad inicial (sección 12 del documento original)
+# Subconjunto para la prueba de disponibilidad inicial (sección 12 del documento original).
+# Actualizado 2026-08-30: se excluyen deliberadamente las acciones del GEA
+# (Grupo Cibest/ex-Bancolombia-Sura, Grupo Argos, Cementos Argos, Celsia) por
+# el desenroque accionario del último año, que distorsiona su comportamiento
+# histórico y las vuelve incomparables (ver references/fuentes-colombia.md).
+# Se seleccionaron en su lugar las 5 acciones no-GEA más líquidas de la BVC
+# por valor negociado, según ranking de TradingView.
 universo_piloto:
   - "ECOPETROL.CL"
-  - "PFBCOLOM.CL"
-  - "GRUPOARGOS.CL"
-  - "CEMARGOS.CL"
-  - "CELSIA.CL"
+  - "ISA.CL"
+  - "GEB.CL"
+  - "CORFICOLCF.CL"
+  - "TERPEL.CL"
 
 filtro_liquidez_mensual:
   ventana_dias: 60
