@@ -93,6 +93,30 @@ def main():
     resultado.to_csv(out_path)
     print(f"\nDetalle mes a mes guardado en {out_path}")
 
+    # --- Chequeo 1: ¿el resultado depende de una sola época excepcional? ---
+    resultado["año"] = resultado.index.year
+    por_año = resultado.groupby("año").apply(
+        lambda g: pd.Series({
+            "retorno_cartera_neto": (1 + g["retorno_cartera_neto"]).prod() - 1,
+            "retorno_benchmark": (1 + g["retorno_benchmark"]).prod() - 1,
+            "n_meses": len(g),
+        }),
+        include_groups=False,
+    )
+    print("\n=== Retorno compuesto por año — cartera (neto) vs. benchmark ===")
+    pd.set_option("display.float_format", lambda x: f"{x:.2%}" if abs(x) < 50 else f"{x:.1f}")
+    print(por_año.to_string())
+
+    años_cartera_gana = (por_año["retorno_cartera_neto"] > por_año["retorno_benchmark"]).sum()
+    print(f"\nAños en que la cartera superó al benchmark: {años_cartera_gana} de {len(por_año)}")
+
+    # --- Chequeo 2: ¿el resultado depende de una sola acción? ---
+    conteo_tickers = pd.Series(
+        [t for lista in resultado["tickers"] for t in lista.split(", ")]
+    ).value_counts()
+    print("\n=== Cuántos meses fue seleccionada cada acción ===")
+    print((conteo_tickers / n_meses).apply(lambda x: f"{x:.1%}").to_string())
+
 
 if __name__ == "__main__":
     main()
