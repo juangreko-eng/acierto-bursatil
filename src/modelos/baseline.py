@@ -13,7 +13,8 @@ from .base import ModeloBase
 
 
 class ComprarYMantener(ModeloBase):
-    """Siempre 'compra'; el retorno esperado es el promedio histórico observado."""
+    """Siempre 'compra' (probabilidad de éxito = 1.0); el retorno esperado
+    es el promedio histórico observado."""
 
     nombre = "comprar_y_mantener"
 
@@ -27,7 +28,7 @@ class ComprarYMantener(ModeloBase):
     def predecir(self, features: pd.DataFrame) -> pd.DataFrame:
         n = len(features)
         return pd.DataFrame({
-            "probabilidad_exito": [0.5] * n,
+            "probabilidad_exito": [1.0] * n,
             "retorno_esperado": [self._retorno_promedio] * n,
         }, index=features.index)
 

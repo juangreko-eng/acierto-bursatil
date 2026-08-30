@@ -20,10 +20,11 @@ Ver `references/marco-metodologico.md` para el detalle completo.
 - [x] Modelos de referencia: comprar y mantener, momentum, cruce de medias (`src/modelos/baseline.py`)
 - [x] Regresión logística (`src/modelos/logistic_model.py`)
 - [x] Modelos candidatos: Random Forest, XGBoost (`src/modelos/candidatos.py`, aún sin validar — ver criterios de aprobación)
+- [x] Script de evaluación rápida (`src/backtesting/evaluar_simple.py`) — un solo corte train/test para iterar rápido; **no** reemplaza el walk-forward
 - [ ] Diccionario de datos v1 (borrador en `references/diccionario-datos.md`, pendiente de validar disponibilidad real)
-- [ ] Prueba de disponibilidad de datos con las 5 acciones piloto (`src/datos/`)
+- [x] Prueba de disponibilidad de datos con las 5 acciones piloto (`src/datos/`) — corrida con datos reales, ver `references/fuentes-colombia.md`
 - [ ] Obtención de costos reales de Trii (comisiones, IVA, deslizamiento)
-- [ ] Motor de backtesting walk-forward (por ahora solo existe el etiquetado; falta el ciclo entrenar → predecir → avanzar → reentrenar)
+- [ ] Motor de backtesting walk-forward (por ahora solo existe el etiquetado y una evaluación de un solo corte; falta el ciclo entrenar → predecir → avanzar → reentrenar)
 - [ ] Generador de reporte semanal
 
 ## Estructura
