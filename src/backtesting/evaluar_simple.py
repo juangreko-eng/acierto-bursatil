@@ -92,11 +92,23 @@ def evaluar_modelo(modelo, train: pd.DataFrame, test: pd.DataFrame, columnas_fea
     decide_comprar = comparado["probabilidad_exito"] > 0.5
 
     señales = comparado[decide_comprar]
+    aciertos = señales[señales["etiqueta"] == 1]
+    fallos = señales[señales["etiqueta"] == -1]
     no_neutrales = señales[señales["etiqueta"] != 0]
 
     tasa_acierto = (no_neutrales["etiqueta"] == 1).mean() if len(no_neutrales) else float("nan")
     retorno_prom_señal = señales["retorno_realizado"].mean() if len(señales) else float("nan")
     retorno_prom_todas = comparado["retorno_realizado"].mean()
+
+    retorno_prom_aciertos = aciertos["retorno_realizado"].mean() if len(aciertos) else float("nan")
+    retorno_prom_fallos = fallos["retorno_realizado"].mean() if len(fallos) else float("nan")
+    # Cuánto se gana en promedio por cada peso que se pierde en promedio.
+    # >1 significa que las ganancias compensan las pérdidas aunque se acierte poco.
+    ratio_ganancia_perdida = (
+        abs(retorno_prom_aciertos / retorno_prom_fallos)
+        if retorno_prom_fallos and retorno_prom_fallos != 0 and pd.notna(retorno_prom_fallos)
+        else float("nan")
+    )
 
     return {
         "modelo": modelo.nombre,
@@ -105,6 +117,9 @@ def evaluar_modelo(modelo, train: pd.DataFrame, test: pd.DataFrame, columnas_fea
         "tasa_acierto_no_neutral": tasa_acierto,
         "retorno_prom_si_compra": retorno_prom_señal,
         "retorno_prom_todas": retorno_prom_todas,
+        "retorno_prom_aciertos": retorno_prom_aciertos,
+        "retorno_prom_fallos": retorno_prom_fallos,
+        "ratio_ganancia_perdida": ratio_ganancia_perdida,
     }
 
 
