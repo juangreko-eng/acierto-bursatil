@@ -93,14 +93,17 @@ universo_candidato:
 # (Grupo Cibest/ex-Bancolombia-Sura, Grupo Argos, Cementos Argos, Celsia) por
 # el desenroque accionario del último año, que distorsiona su comportamiento
 # histórico y las vuelve incomparables (ver references/fuentes-colombia.md).
-# Se seleccionaron en su lugar las 5 acciones no-GEA más líquidas de la BVC
-# por valor negociado, según ranking de TradingView.
+# Ampliado 2026-08-30 (2): se agregan Mineros y Davivienda preferencial, las
+# no-GEA restantes del universo candidato, para dar más opciones al ranking
+# de factores (ver references/marco-metodologico.md, sección de factores).
 universo_piloto:
   - "ECOPETROL.CL"
   - "ISA.CL"
   - "GEB.CL"
   - "CORFICOLCF.CL"
   - "TERPEL.CL"
+  - "MINEROS.CL"
+  - "PFDAVVNDA.CL"
 
 filtro_liquidez_mensual:
   ventana_dias: 60

@@ -70,6 +70,18 @@ def volatilidad(close: pd.Series, ventana: int = 20) -> pd.Series:
     return valor.rename(f"vol_{ventana}")
 
 
+def momentum_12_1(close: pd.Series) -> pd.Series:
+    """
+    Factor clásico de momentum de mediano plazo: retorno de los últimos 12
+    meses (~252 ruedas) EXCLUYENDO el último mes (~21 ruedas), para evitar
+    el efecto de reversión de corto plazo que sí contamina un momentum de
+    12 meses "puro". Requiere ~273 ruedas de historia para tener un primer
+    valor válido.
+    """
+    valor = close.shift(21).pct_change(231)
+    return valor.rename("momentum_12_1")
+
+
 def atr(high: pd.Series, low: pd.Series, close: pd.Series, ventana: int = 14) -> pd.Series:
     """Rango verdadero promedio (Average True Range)."""
     close_prev = close.shift(1)
@@ -168,6 +180,7 @@ def construir_features(df: pd.DataFrame, close_indice: pd.Series = None) -> pd.D
         volatilidad(close).to_frame(),
         atr(df["High"], df["Low"], close).to_frame(),
         maxima_caida_reciente(close).to_frame(),
+        momentum_12_1(close).to_frame(),
         volumen_promedio(df["Volume"]),
         variacion_anormal_volumen(df["Volume"]).to_frame(),
         ruedas_sin_negociacion(df["Volume"]).to_frame(),
