@@ -15,12 +15,15 @@ Ver `references/marco-metodologico.md` para el detalle completo.
 - [x] Definición de objetivo, perfil de operación y universo candidato
 - [x] Metodología de etiquetado (triple barrera) y validación (walk-forward)
 - [x] Estructura del repositorio
+- [x] Variables v1 de precio, volumen y liquidez (`src/variables/features.py`, con tests)
+- [x] Etiquetado por triple barrera (`src/backtesting/triple_barrera.py`, con tests)
+- [x] Modelos de referencia: comprar y mantener, momentum, cruce de medias (`src/modelos/baseline.py`)
+- [x] Regresión logística (`src/modelos/logistic_model.py`)
+- [x] Modelos candidatos: Random Forest, XGBoost (`src/modelos/candidatos.py`, aún sin validar — ver criterios de aprobación)
 - [ ] Diccionario de datos v1 (borrador en `references/diccionario-datos.md`, pendiente de validar disponibilidad real)
 - [ ] Prueba de disponibilidad de datos con las 5 acciones piloto (`src/datos/`)
 - [ ] Obtención de costos reales de Trii (comisiones, IVA, deslizamiento)
-- [ ] Modelos de referencia (buy&hold, momentum, cruce de medias, regresión logística)
-- [ ] Modelos candidatos (Random Forest, XGBoost/LightGBM)
-- [ ] Motor de backtesting walk-forward
+- [ ] Motor de backtesting walk-forward (por ahora solo existe el etiquetado; falta el ciclo entrenar → predecir → avanzar → reentrenar)
 - [ ] Generador de reporte semanal
 
 ## Estructura
