@@ -24,7 +24,7 @@ Ver `references/marco-metodologico.md` para el detalle completo.
 - [ ] Diccionario de datos v1 (borrador en `references/diccionario-datos.md`, pendiente de validar disponibilidad real)
 - [x] Prueba de disponibilidad de datos con las 5 acciones piloto (`src/datos/`) — corrida con datos reales, ver `references/fuentes-colombia.md`
 - [ ] Obtención de costos reales de Trii (comisiones, IVA, deslizamiento)
-- [ ] Motor de backtesting walk-forward (por ahora solo existe el etiquetado y una evaluación de un solo corte; falta el ciclo entrenar → predecir → avanzar → reentrenar)
+- [x] Motor de backtesting walk-forward (`src/backtesting/walk_forward.py` + `correr_walk_forward.py`) — reentrena periódicamente sin mezclar pasado y futuro, verificado con test dedicado anti-fuga de información; guarda cada predicción en `predictions/` para trazabilidad
 - [ ] Generador de reporte semanal
 
 ## Estructura
